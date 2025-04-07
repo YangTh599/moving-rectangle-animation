@@ -22,24 +22,39 @@ def init_game():
     return window
 
 # Draw Function to update graphics
-def draw(window):
+def draw(window,shape):
     """DRAW FUNCTION | allows screen graphics to be added"""
     #BACKGROUND
     window.fill(WHITE) # 15
     
 
     #FOREGROUND
-    
+    shape.rect.draw()
 
     #UPDATE DISPLAY
     pygame.display.update()
 
-def handle_events():
+def handle_events(shape, colors:list):
     """Handles any pygame event such as key input"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # QUIT
             return False
     
+    shape.rect.change_pos(shape.rect.x + shape.x_vel, shape.rect.y + shape.y_vel)
+
+    if shape.rect.x < 0 or (shape.rect.x + shape.rect.side_width) > SCREEN_WIDTH:
+        shape.x_vel *= -1
+        shape.rect.change_color(rand_color())
+    
+    if shape.rect.y < 0 or (shape.rect.y + shape.rect.side_height) > SCREEN_HEIGHT:
+        shape.y_vel *= -1
+        shape.rect.change_color(rand_color())
+
+    
+    
+
+    
+
     keys = pygame.key.get_pressed()
 
     return True
@@ -50,7 +65,11 @@ def main(): # MAIN FUNCTION
     clock = pygame.time.Clock()
     # ADD ALL OBJECTS/CLASSES BELOW HERE
 
-    
+    colors = [THAYER_GREEN, COMMUNIST_RED, LIME, CHARTREUSE, CC_BLUE, PURPLE_GUY, MAGENTA, EMERALD]
+
+    rect1 = Player(window, 5)
+
+
     
     # ADD ALL OBJECTS/CLASSES ABOVE HERE
     run = True
@@ -58,17 +77,26 @@ def main(): # MAIN FUNCTION
 
         clock.tick(FPS) # FPS Tick
 
-        run = handle_events()
+        run = handle_events(rect1, colors)
         
 
         
-        draw(window) # UPDATES SCREEN
+        draw(window,rect1) # UPDATES SCREEN
 
     pygame.quit()
     sys.quit()
     quit()
 # ADD CLASSES HERE
 
+class Player():
+
+    def __init__(self, window, vel):
+
+        self.x_vel = vel
+        self.y_vel = vel
+        self.window = window
+
+        self.rect = shapes.Rectangle(window, COMMUNIST_RED, (SCREEN_WIDTH //2), (SCREEN_HEIGHT//2), 50, 50)
 
 
 # ADD CLASSES ABOVE
